@@ -1,0 +1,563 @@
+﻿@{
+    ViewData["Title"] = "Increment";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string[] actionIdArray = ViewBag.MyArray as string[];
+}
+
+<div class="container-fluid simplebar-content-wrapper custom-scroll-content">
+
+    <!-- start page title -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card border-top border-0 border-4 border-info">
+                <div class="card-body" style="padding-bottom: 1px; padding-top: 1px; box-shadow: 2px 2px 5px Gray">
+                    <div class="page-title-box">
+                        <div class="page-title-right">
+                            <ol class="breadcrumb m-0">
+                                <li class="breadcrumb-item"><a href="javascript: void(0);">Dashboard</a></li>
+                                <li class="breadcrumb-item"><a href="javascript: void(0);">Pages</a></li>
+                                <li class="breadcrumb-item active">Increment Transaction</li>
+                            </ol>
+                        </div>
+                        <h4 class="page-title">Increment Transaction</h4>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!-- end page title -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card border-top border-0 border-4 border-info">
+                <div class="card-body" style=" box-shadow: 2px 2px 5px Gray">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="row mb-2">
+                                <div class="col-sm-4">
+                                    <button type="button" id="AddButton" class="btn btn-success waves-effect waves-light" data-bs-toggle="modal" data-bs-target="#IncrementModalRB"><i class="mdi mdi-plus-circle me-2"></i> Add Record</button>
+                                </div>
+                                <div class="col-sm-8">
+                                    <div class="text-sm-end">
+                                        <button type="button" style="display:none" class="btn btn-info mb-2 me-1">Import</button>
+                                        <button type="button" style="display:none" class="btn btn-info mb-2 me-1">Export Pdf</button>
+                                        <button type="button" style="display:none" class="btn btn-blue mb-2 me-1">Export Excel</button>
+                                        <button type="button" id="PrintButton" style="display:none" class="btn btn-primary mb-2 me-1">Print</button>
+                                        <button type="button" class="btn btn-primary waves-effect waves-light" id="RefreshModel"><i class="mdi mdi-cloud-refresh me-2"></i> Refresh</button>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="table-responsive">
+                                <table id="example" class="table table-striped table-bordered" style="width:100% ;text-align:center">
+                                    <thead class="table-secondary">
+                                        <tr>
+                                            <th>Sl No.</th>
+                                            <th>Employee Name</th>
+                                            <th>Date of Joining</th>
+                                            <th>Designation</th>
+                                            <th>Job Role</th>
+                                            <th>Status</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+                                        @*  @foreach (BudgetSetup AC in ViewBag.BudgetSetups)
+                                        {
+                                        <tr>
+                                        <td>@AC.SerialNo</td>
+                                        <td>@AC.BudgetRefNo</td>
+                                        <td>@AC.BudgetName</td>
+                                        <td>@AC.Company</td>
+                                        <td>@AC.CostCenter</td>
+                                        <td>@AC.CreateDate</td>
+                                        <td><span class="badge rounded-pill bg-success">Active</span> </td>
+                                        <td>
+                                        <a href="javascript:;" class="action-icon EditButton"><i class="mdi mdi-square-edit-outline" onclick="EditItem(@AC.MastBudgetSetupKey)" data-toggle="tooltip" title="Edit" style="color:forestgreen"></i></a>
+                                        <a href="javascript:;" class="action-icon DeleteButton"> <i class="mdi mdi-delete" onclick="TagDelete(@AC.MastBudgetSetupKey)" data-toggle="tooltip" title="Delete" style="color:red"></i></a>
+                                        </td>
+                                        </tr>
+                                        } *@
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<div class="modal fade" id="IncrementModalRB" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            @* @using (Html.BeginForm("SaveDetailsStatutoryHeaderLimit", "StatutoryDetailsLimitUI", FormMethod.Post, new { @class = "form-horizontal needs-validation", role = "form", enctype = "multipart/form-data", novalidate = "true"
+            ))
+            {*@
+            <div class="modal-header border-bottom border-0 border-4 border-info" style="background-color: #85b1b4; ">
+                <h5 class="modal-title showCls" id="staticBackdropLabel">Increment Setup RB Form :: [New]</h5>
+
+            </div>
+
+            <div class="modal-body">
+                <div class="row ">
+                    @* <input type="hidden" asp-for="BudgetSetupKey" value="0" /> *@
+                    @*  <input type="hidden" asp-for="Type" value="0" /> *@
+                    <div class="row">
+                        <div class="col-12">
+
+                            <div class="row mb-2">
+                                <label class="col-md-2" for="confirm1">Increment Type:</label>
+                                <div class="col-md-4">
+
+                                    <select class="form-select"></select>
+                                </div>
+
+                                <label class="col-md-2" for="confirm1">Amount:</label>
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="row" style="height:300px; overflow-y:auto;">
+                                <div class="col-6">
+                                    <div class="p-2 mb-1 border border-secondary rounded">
+
+                                        <div class="col-xl-12">
+
+                                            <table id="example" class="table table-striped table-bordered" style="width:100% ;text-align:center">
+                                                <thead class="table-secondary">
+                                                    <tr>
+                                                        <th colspan="2">Existing/Proposed Salary</th>
+
+
+                                                    </tr>
+                                                    <tr>
+
+                                                        <th>Salary Head</th>
+                                                        <th>Amount</th>
+
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="TBody_TableExistingSalaryDetails">
+                                                    <tr>
+                                                        <td>Basic</td>
+                                                        <td>0.00</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>HRA</td>
+                                                        <td>0.00</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>DA</td>
+                                                        <td>0.00</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Take Home</td>
+                                                        <td><input typr="text" class="form-control" value="0.00" /></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="p-2 mb-1 border border-secondary rounded">
+
+                                        <div class="col-xl-12">
+
+                                            <table id="examples" class="table table-striped table-bordered" style="width:100% ;text-align:center">
+                                                <thead class="table-secondary">
+                                                    <tr>
+                                                        <th colspan="2">Finalized Salary</th>
+
+
+                                                    </tr>
+                                                    <tr>
+
+                                                        <th>Salary Head</th>
+                                                        <th>Amount</th>
+
+                                                    </tr>
+
+                                                </thead>
+                                                <tbody id="TBody_TableBugetDetails">
+                                                    <tr>
+                                                        <td colspan="2">Addition</td>
+
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Basic</td>
+                                                        <td>0.00</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>HRA</td>
+                                                        <td>0.00</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>DA</td>
+                                                        <td>0.00</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="2">Take Home<input typr="text" class="form-control" value="0.00" /></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                        <div class="col-12 mt-4 mb-4">
+                            <div class="p-2 mb-1 border border-secondary rounded">
+                                <span style="font-weight: bold; font-size: 1.2em;">Proposed Other Payments</span>
+                                <div class="row">
+                                    <div class="col-2">
+                                        <div style="display:inline-block;">
+                                            <div>
+                                                <lable class="col-md-6" for="confirm1">Allowance Type:</lable>
+                                                <div class="col-md-6">
+                                                    <select class="form-select"></select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-2">
+                                        <div style="display:inline-block;">
+                                            <div>
+                                                <lable class="col-md-6" for="confirm1">Basis:</lable>
+                                                <div class="col-md-6">
+                                                    <select class="form-select"></select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-2">
+                                        <div style="display:inline-block;">
+                                            <div>
+                                                <lable class="col-md-6" for="confirm1">Claim Frequency:</lable>
+                                                <div class="col-md-6">
+                                                    <select class="form-select"></select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-2">
+                                        <div style="display:inline-block;">
+                                            <div>
+                                                <lable class="col-md-6" for="confirm1">Claimed By:</lable>
+                                                <div class="col-md-6">
+                                                    <select class="form-select"></select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-2">
+                                        <div style="display:inline-block;">
+                                            <div>
+                                                <lable class="col-md-6" for="confirm1">Amount:</lable>
+                                                <div class="col-md-6">
+                                                    <input type="text" class="form-control" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-1">
+                                        <div style="display:inline-block;">
+                                            <div>
+                                                <lable class="col-md-6" for="confirm1">Reimburse:</lable>
+                                                <div class="col-md-6">
+                                                    <input type="checkbox" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-1">
+                                        <div style="display:inline-block;">
+                                            <div>
+                                                <button type="button" class="btn btn-primary">Add</button>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12">
+
+
+                            <div class="row">
+                                <div class="col-3">
+                                    <div class="p-1 mb-1 border border-secondary rounded">
+
+                                        <div class="col-xl-12">
+
+                                            <table id="exampless" class="table table-striped table-bordered" style="width:100% ;text-align:center">
+                                                <thead class="table-secondary">
+                                                    <tr>
+                                                        <th colspan="2">Existing Other Payments</th>
+
+
+                                                    </tr>
+                                                    <tr>
+
+                                                        <th>Type</th>
+                                                        <th>Amount</th>
+
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="TBody_TableExistingSalaryDetails">
+                                                    <tr>
+                                                        <td>TA</td>
+                                                        <td>0.00</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Tour</td>
+                                                        <td>0.00</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Android</td>
+                                                        <td>0.00</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Take</td>
+                                                        <td><input typr="text" class="form-control" value="0.00" /></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="col-9">
+                                    <div class="p-1 mb-1 border border-secondary rounded">
+
+                                        <div class="col-xl-12">
+
+                                            <table id="examplesss" class="table table-striped table-bordered" style="width:100% ;text-align:center">
+                                                <thead class="table-secondary">
+                                                    <tr>
+                                                        <th colspan="10">Proposed Other Payments</th>
+
+
+                                                    </tr>
+                                                    <tr>
+
+                                                        <th>Name</th>
+                                                        <th>Basis</th>
+                                                        <th>Frequency</th>
+                                                        <th>Claimed By</th>
+                                                        <th>Amount</th>
+                                                        <th>Reimburse</th>
+                                                        @* <th></th>
+                                                        <th></th> *@
+                                                        <th>Action</th>
+                                                        <th>Remarks</th>
+
+                                                    </tr>
+
+                                                </thead>
+                                                <tbody id="TBody_TableBugetDetails">
+
+                                                    <tr>
+                                                        <td>Laptop Rental Senior Management</td>
+                                                        <td>Actual</td>
+                                                        <td>Monthly</td>
+                                                        <td>Central</td>
+                                                        <td>Amount</td>
+                                                        <td>Yes</td>
+                                                        @* <td></td>
+                                                        <td></td> *@
+                                                        <td>Edit/Delete</td>
+                                                        <td>Remarks</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>Laptop Rental Senior Management</td>
+                                                        <td>Actual</td>
+                                                        <td>Monthly</td>
+                                                        <td>Central</td>
+                                                        <td>Amount</td>
+                                                        <td>Yes</td>
+                                                        @* <td></td>
+                                                        <td></td> *@
+                                                        <td>Edit/Delete</td>
+                                                        <td>Remarks</td>
+                                                    </tr>
+
+
+                                                </tbody>
+                                            </table>
+
+                                        </div>
+
+                                        <div>
+                                            <div class="form-group row pt-1" style="display: flex; justify-content: right;background-color:lightgrey">
+                                                <label class="col-sm-2 control-label text-right">Total Monthly Variable</label>
+                                                <div class="col-sm-2">
+                                                    <input class="form-control" ReadOnly="true" />
+                                                </div>
+                                                <label class="col-sm-2 control-label text-right">Total Monthly Fixed</label>
+                                                <div class="col-sm-2">
+                                                    <input class="form-control" ReadOnly="true" />
+                                                </div>
+                                                <label class="col-sm-2 control-label text-right">Total Monthly Others</label>
+                                                <div class="col-sm-2">
+                                                    <input class="form-control" ReadOnly="true" />
+                                                </div>
+
+                                            </div>
+                                            <div class="row mb-1 borderclass p-2">
+                                                <h4>Total Proposed Salary(Salary + Others)</h4>
+                                                <div class="col-sm-4">
+                                                    <label class="control-label font-weight-bold">Total Proposed Take Home</label>
+                                                    <input class="form-control" ReadOnly="true" />
+                                                </div>
+
+                                                <div class="col-sm-4">
+                                                    <label class="control-label font-weight-bold">Total CTC Per Month</label>
+                                                    <input class="form-control" ReadOnly="true" />
+                                                </div>
+
+                                                <div class="col-sm-4">
+                                                    <label class="control-label font-weight-bold">Total CTC Per Annum</label>
+                                                    <input class="form-control" ReadOnly="true" />
+                                                </div>
+                                            </div>
+                                            <div class="row mb-1 borderclass p-2">
+                                                <h4>Total Finalized Salary(Salary + Others)</h4>
+                                                <div class="col-sm-4">
+                                                    <label class="control-label font-weight-bold">Total Finalized Take Home</label>
+                                                    <input class="form-control" ReadOnly="true" />
+                                                </div>
+
+                                                <div class="col-sm-4">
+                                                    <label class="control-label font-weight-bold">Total CTC Per Month</label>
+                                                    <input class="form-control" ReadOnly="true" />
+                                                </div>
+
+                                                <div class="col-sm-4">
+                                                    <label class="control-label font-weight-bold">Total CTC Per Annum</label>
+                                                    <input class="form-control" ReadOnly="true" />
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" id="SaveBudgetSetup" name="SaveDepositSetup" class="btn btn-success"><i class="fas fa-save"></i>&nbsp; Submit</button>
+                        <a href="javascript:;" id="CloseDeposit" class="btn btn-warning"><i class="mdi mdi-close"></i>&nbsp; Close</a>
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section dateStyle
+{
+    <!--plugins-->
+
+    <link href="~/assets/plugins/datatable/css/dataTables.bootstrap5.min.css" rel="stylesheet" />
+
+}
+
+
+@section dateScript
+{
+    <!--plugins-->
+
+    <script src="~/assets/plugins/datatable/js/jquery.dataTables.min.js"></script>
+    <script src="~/assets/plugins/datatable/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.16/dist/sweetalert2.all.min.js"></script>
+}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $("#CloseDeposit").click(function(){
+        window.location.reload();
+    })
+</script>
+
+
+<script>
+
+
+    function capitalizeFirstLetter(input) {
+        input.value = input.value.trim().replace(/^\s*\w/, match => match.toUpperCase());
+    }
+
+
+
+
+    var actionIds = [@Html.Raw(string.Join(",", actionIdArray.Select(id => "'" + id + "'")))];
+
+    // Iterate through the actionIds array and perform some action for each element
+    //actionIds.forEach(function (actionId) {
+    ;
+    if (actionIds.includes("2")) {
+        $("#AddButton").prop("disabled", false);
+        console.log("false");
+
+    }
+    else {
+        $("#AddButton").prop("disabled", true);
+        console.log("true");
+    }
+    if (actionIds.includes("3")) {
+        $("#SaveBudgetSetup").prop("disabled", false);
+
+    }
+    else {
+        if (actionIds.includes("6")) {
+            $('.EditButton').css('cursor', 'pointer');
+            $("#SaveBudgetSetup").prop("disabled", true);
+        }
+        else {
+
+            $('.EditButton').css('display', 'none');
+
+           
+        }
+
+    }
+    if (actionIds.includes("4")) {
+        $('.DeleteButton').css('cursor', 'pointer');
+
+    }
+    else {
+        $('.DeleteButton').css('display', 'none');
+    }
+    if (actionIds.includes("5")) {
+        $("#PrintButton").prop("disabled", false);
+
+    }
+    else {
+        $("#PrintButton").prop("disabled", true);
+    }
+
+
+    // Perform additional actions here
+    //});
+</script>

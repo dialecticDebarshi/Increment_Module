@@ -1,0 +1,354 @@
+﻿@{
+    ViewData["Title"] = "Increment";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+@model TenantCompany.Models.Increment;
+<style>
+
+    table {
+        table-layout: fixed;
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    td, th {
+        white-space: nowrap;
+        vertical-align: top;
+        border-top: 1px solid #ccc;
+        padding: 5px;
+        text-align: center; /* Center align text within cells */
+        font-size: 80%;
+    }
+
+    .fix {
+        position: sticky;
+        left: 0;
+        z-index: 1;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+        /*.fix th,
+        .fix td {
+            position: sticky;
+            left: 0;
+            z-index: 2;
+            background-color: #ffffff;
+        }*/
+
+            /*.fix th.fix,
+            .fix td.fix {
+                background-color: transparent;
+            }*/
+
+        /*.fix::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #ffffff;
+            pointer-events: none;
+            z-index: -1;
+        }*/
+
+    .outer {
+        overflow-x: auto;
+        width: 90%;
+        margin-left: 100px;
+        background-color: #f0f0f0;
+        padding: 20px;
+    }
+
+    .inner {
+        overflow-x: hidden;
+        width: 1000px;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        overflow-x: auto;
+        overflow-y: auto;
+        max-height: 72vh;
+    }
+
+        .inner table {
+            width: auto;
+        }
+
+    .table thead th {
+        background-color: #3498db;
+        color: #fff;
+    }
+
+    .table tbody th {
+        background-color: #f0f0f0;
+    }
+
+    .table tbody tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    /* .editable {
+            background-color: #e1f5fe;
+        }
+     */
+    .table tbody tr:hover {
+        background-color: #e0e0e0;
+        transition: background-color 0.3s ease;
+    }
+
+    .table tbody tr:nth-child(1) {
+        top:10px;
+    }
+
+    .fix:nth-child(1) {
+        left: 0px;
+    }
+
+    .fix:nth-child(2) {
+        left: 12vw; /* Adjust according to the width of previous columns */
+    }
+
+    
+
+    .invalidInput {
+        border-color: red;
+        background-color: #fee;
+    }
+    
+
+</style>
+
+<div class="container-fluid simplebar-content-wrapper custom-scroll-content">
+
+    <!-- start page title -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card border-top border-0 border-4 border-info">
+                <div class="card-body" style="padding-bottom: 1px; padding-top: 1px; box-shadow: 2px 2px 5px Gray">
+                    <div class="page-title-box">
+                        <div class="page-title-right">
+                            <ol class="breadcrumb m-0">
+                                <li class="breadcrumb-item"><a href="javascript: void(0);">Dashboard</a></li>
+                                <li class="breadcrumb-item"><a href="javascript: void(0);">Pages</a></li>
+                                <li class="breadcrumb-item active">Increment Transaction</li>
+                            </ol>
+                        </div>
+                        <h4 class="page-title">Increment Transaction</h4>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <!-- end page title -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card border-top border-0 border-4 border-info">
+                <div class="card-body" style=" box-shadow: 2px 2px 5px Gray">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="row mb-2">
+                                <div class="col-sm-4">
+                                    @* <button type="button" id="AddButton" class="btn btn-success waves-effect waves-light" data-bs-toggle="modal" data-bs-target="#IncrementModalRB"><i class="mdi mdi-plus-circle me-2"></i> Add Record</button> *@
+                                </div>
+                                <div class="col-sm-8">
+                                    <div class="text-sm-end">
+                                        <button type="button" style="display:none" class="btn btn-info mb-2 me-1">Import</button>
+                                        <button type="button" style="display:none" class="btn btn-info mb-2 me-1">Export Pdf</button>
+                                        <button type="button" style="display:none" class="btn btn-blue mb-2 me-1">Export Excel</button>
+                                        <button type="button" id="PrintButton" style="display:none" class="btn btn-primary mb-2 me-1">Print</button>
+                                        <button type="button" class="btn btn-primary waves-effect waves-light" id="RefreshModel"><i class="mdi mdi-cloud-refresh me-2"></i> Refresh</button>
+                                    </div>
+                                </div>
+
+                            </div>
+                            @* <div class="table-responsive"> *@
+                            <div>
+                            <form id="myForm">
+                                <div class="row -mb-4">
+                                    <div class="col-sm-4">
+                                        <h6 class="mb-0">Company<sup style="color:red">*</sup>:</h6>
+                                        @Html.DropDownListFor(m => m.Company_Key, ViewBag.company as SelectList, new { @class = "form-select" ,@required="required"})
+                                        @Html.ValidationMessageFor(m => m.Company_Key)
+                                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                                    </div>
+                                    <div class="col-sm-4 text-secondary">
+                                        <h6 class="mb-0">CostCenter<sup style="color:red">*</sup> :</h6>
+                                        <select class="form-select" asp-for="Costcenter_Key">
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-4 text-secondary">
+                                            <h6 class="mb-0">Division<sup style="color:red">*</sup>:</h6>
+                                        <select class="form-select" asp-for="Division_Key">
+                                        </select>
+                                    </div>
+                                </div>
+
+
+                                <div class="row -mb-4">
+
+
+
+                                    <div class="col-sm-4 text-secondary">
+
+                                            <h6 class="mb-0">Warehouse<sup style="color:red">*</sup>:</h6>
+                                            <div id="Warehouse"></div>
+
+                                       
+                                       
+                                    </div>
+                                    
+                                    <div class="col-sm-4">
+                                        <h6 class="mb-0">Designation<sup style="color:red">*</sup>:</h6>
+
+                                      
+                                            <div id="designationContainer" style="overflow-y:auto;max-height:200px;">
+                                                <!-- Designation checkboxes will be dynamically added here -->
+                                            </div>
+                                        
+
+                                    </div>
+                                        <div class="col-sm-4">
+
+                                            <h6 class="mb-0">StaffType<sup style="color:red">*</sup>:</h6>
+                                            @Html.DropDownListFor(m => m.stafftypeid, ViewBag.stafftype as SelectList, new { @class = "form-select row-mb-3 mb-3" })
+
+                                            <input asp-for="EffectiveDate" class="form-control" type="date" />
+                                        </div>
+
+                                </div>
+                                <div class="row mb-4 mt-3">
+                                    <div class="col-sm-4 ">
+                                            <button type="button" id="Search_inc" name="SaveJobRole" class="btn btn-success"><i class="fas fa-search"></i>&nbsp; Search</button>
+                                    </div>
+                                    <div class="col-sm-4">
+                                            <div class="spinner-border avatar-lg text-primary m-2" role="status" id="spinnerid" style="display:none"></div>
+                                    </div>
+                                </div>
+                                    
+                                </form>
+
+
+                                @* <div class="outer" id="tbl_INCRE" style="display:none"> *@
+                                    <div class="row">
+                                    <div class="col-12">
+                                        <div class="" id="tbl_INCRE" style="display:none; width:100%;">
+                                            <div class="inner" style="width:100%;">
+                                                @* <table class="table table-centered mb-0"> *@
+                                                @* <table id="tbl_Increment" class="table" style="text-align:center"> *@
+                                                <table id="tbl_Increment" class="table table-bordered table-striped-custom " style="text-align:center; ">
+                                                    <thead id="THead_TableIncrement" style="position: sticky;top: 0;z-index: 1;">
+                                                       
+                                                    </thead>
+                                                    <tbody id="TBody_TableIncrement">
+                                                        
+
+
+
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                        </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+@section dateStyle
+{
+    <!--plugins-->
+    @*<link href="~/assets/plugins/datatable/css/dataTables.bootstrap5.min.css" rel="stylesheet" />*@
+    <style src="https://cdn.datatables.net/2.0.1/css/dataTables.bootstrap5.css"></style>
+    <style src="https://cdn.datatables.net/2.0.1/css/dataTables.dataTables.css"></style>
+    <style src="https://cdn.datatables.net/fixedcolumns/5.0.0/css/fixedColumns.dataTables.css"></style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.2/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.11/jquery.validate.unobtrusive.min.js"></script>
+    <style type="text/css">
+
+
+
+        /* div.dataTables_wrapper {
+                                            width: 800px;
+                                            margin: 0 auto;
+                                        }*/
+        /* th, td {
+                                    white-space: nowrap;
+                                }
+
+
+                                .table-striped-custom > tbody > tr:nth-child(odd) > td,
+                                .table-striped-custom > tbody > tr:nth-child(odd) > th {
+                                    background-color: #f8f9fa;
+                                }
+
+                                .table-striped-custom > tbody > tr:nth-child(even) > td,
+                                .table-striped-custom > tbody > tr:nth-child(even) > th {
+                                    background-color: #FFFFFF;
+                                } */
+
+
+
+
+
+    </style>
+
+
+
+
+}
+
+@section dateScript
+{
+    <!--plugins-->
+    @*   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script src="~/assets/plugins/datatable/js/jquery.dataTables.min.js"></script>
+        <script src="~/assets/plugins/datatable/js/dataTables.bootstrap5.min.js"></script> *@
+
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://cdn.datatables.net/2.0.1/js/dataTables.js"></script>
+
+    <script src="https://cdn.datatables.net/2.0.1/js/dataTables.bootstrap5.min.js"></script>
+    @*     <script src="https://cdn.datatables.net/fixedcolumns/5.0.0/js/dataTables.fixedColumns.js"></script>
+    <script src="https://cdn.datatables.net/fixedcolumns/5.0.0/js/fixedColumns.dataTables.js"></script> *@
+
+    <script src="https://editor.datatables.net/extensions/Editor/js/dataTables.editor.js"></script>
+    <script src="https://editor.datatables.net/extensions/Editor/js/editor.bootstrap5.js"></script>
+
+
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.16/dist/sweetalert2.all.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.js"></script>
+
+    @*    <!-- Table Editable plugin-->
+    <script src="~/assets/libs/jquery-tabledit/jquery.tabledit.min.js"></script>
+
+    <!-- Table editable init-->
+    <script src="~/assets/js/pages/tabledit.init.js"></script> *@
+
+    <!-- jQuery library -->
+    
+
+    <!-- jQuery Validation plugin -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+
+
+    <script src="~/jsfile/increment.js"></script>
+    <script>
+
+    </script>
+}
+@* <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.6.0.min.js"></script> *@
+
